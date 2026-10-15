@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                 https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+
+    <persistence-unit name="main" transaction-type="JTA">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/studs</jta-data-source>
+
+        <class>ru.astrosoup.islab.entities.Organization</class>
+        <class>ru.astrosoup.islab.entities.Coordinates</class>
+        <class>ru.astrosoup.islab.entities.Address</class>
+        <class>ru.astrosoup.islab.entities.User</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <!-- кэшируются только справочники (@Cacheable(true)): Coordinates и Address -->
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+        <validation-mode>AUTO</validation-mode>
+
+        <properties>
+            <property name="jboss.as.jpa.providerModule" value="application"/>
+            <property name="eclipselink.weaving" value="false"/>
+            <property name="eclipselink.target-database" value="PostgreSQL"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+            <property name="eclipselink.target-server" value="WildFly"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'com.vaadin' version '25.0.0'
+}
+
+group 'ru.astrosoup'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+ext {
+    junitVersion = '5.13.2'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    implementation platform("com.vaadin:vaadin-bom:25.0.0")
+    implementation 'com.vaadin:vaadin-core'
+    implementation 'com.vaadin:vaadin-cdi'
+
+    implementation("org.liquibase:liquibase-cdi-jakarta:5.0.4")
+
+    compileOnly("org.projectlombok:lombok:1.18.48")
+	annotationProcessor("org.projectlombok:lombok:1.18.48")
+	
+	testCompileOnly("org.projectlombok:lombok:1.18.48")
+	testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
+
+    compileOnly('jakarta.platform:jakarta.jakartaee-api:11.0.0')
+
+    implementation('org.eclipse.persistence:org.eclipse.persistence.jpa:5.0.2')
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+test {
+    useJUnitPlatform()
+}
