@@ -10,6 +10,9 @@ import ru.astrosoup.islab.entities.Organization;
 import ru.astrosoup.islab.events.DataChangedEvent;
 import ru.astrosoup.islab.events.EntityKind;
 import ru.astrosoup.islab.exceptions.BusinessException;
+import ru.astrosoup.islab.exceptions.ConflictException;
+import ru.astrosoup.islab.exceptions.ObjectNotFoundException;
+import ru.astrosoup.islab.tx.SerializableIsolation;
 import ru.astrosoup.islab.exceptions.EntityValidationException;
 import ru.astrosoup.islab.repositories.*;
 
@@ -32,6 +35,8 @@ public class OrganizationService {
     @Inject
     BeanValidator validator;
     @Inject
+    UniquenessRules uniqueness;
+    @Inject
     Event<DataChangedEvent> events;
 
     public Optional<Organization> find(long id) {
@@ -39,10 +44,11 @@ public class OrganizationService {
     }
 
     public Organization get(long id) {
-        return find(id).orElseThrow(() -> new BusinessException(
+        return find(id).orElseThrow(() -> new ObjectNotFoundException(
                 "Организация с id=" + id + " не найдена (возможно, она удалена другим пользователем)"));
     }
 
+    @SerializableIsolation
     public Organization create(Organization draft) {
         draft.setId(0);
         draft.setVersion(0);
@@ -50,25 +56,31 @@ public class OrganizationService {
         normalize(draft);
         resolveReferences(draft);
         validator.check(draft);
+        uniqueness.requireUniqueFullName(draft.getFullName(), 0);
         repository.persist(draft);
         PersistenceFailures.flush(repository::flush, CONFLICT);
         events.fire(new DataChangedEvent(EntityKind.ORGANIZATION));
         return draft;
     }
 
+    @SerializableIsolation
     public Organization update(Organization draft) {
         Organization managed = repository.find(draft.getId());
         if (managed == null) {
-            throw new BusinessException("Организация с id=" + draft.getId()
+            throw new ObjectNotFoundException("Организация с id=" + draft.getId()
                     + " не найдена (возможно, она удалена другим пользователем)");
         }
         if (managed.getVersion() != draft.getVersion()) {
-            throw new BusinessException(CONFLICT);
+            throw new ConflictException(CONFLICT);
         }
         normalize(draft);
         resolveReferences(draft);
+        String oldFullNameKey = UniquenessRules.fullNameKey(managed.getFullName());
         managed.copyEditableFieldsFrom(draft);
         validator.check(managed);
+        if (!java.util.Objects.equals(oldFullNameKey, UniquenessRules.fullNameKey(managed.getFullName()))) {
+            uniqueness.requireUniqueFullName(managed.getFullName(), managed.getId());
+        }
         PersistenceFailures.flush(repository::flush, CONFLICT);
         events.fire(new DataChangedEvent(EntityKind.ORGANIZATION));
         return managed;
@@ -77,8 +89,9 @@ public class OrganizationService {
     public void delete(long id) {
         Organization organization = get(id);
         repository.remove(organization);
+        // на организацию никто не ссылается, поэтому единственная причина сбоя — параллельное изменение или удаление
         PersistenceFailures.flush(repository::flush,
-                "Невозможно удалить организацию #" + id + ": с ней связаны другие объекты");
+                "Организация #" + id + " была изменена или удалена другим пользователем");
         events.fire(new DataChangedEvent(EntityKind.ORGANIZATION));
     }
 

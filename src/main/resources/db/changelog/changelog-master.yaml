@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changes/001-schema.sql
+  - include:
+      file: db/changelog/changes/002-roles-and-import-history.sql
+  - include:
+      file: db/changelog/changes/003-versions-and-full-name-index.sql

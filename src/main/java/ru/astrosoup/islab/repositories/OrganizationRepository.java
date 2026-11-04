@@ -43,6 +43,19 @@ public class OrganizationRepository {
         return em.createQuery("SELECT o FROM Organization o ORDER BY o.id", Organization.class).getResultList();
     }
 
+    /** Есть ли другая организация (с id, отличным от {@code excludeId}) с таким же полным названием без учёта регистра. */
+    public boolean existsByFullName(String fullName, long excludeId) {
+        return em.createQuery(
+                        "SELECT COUNT(o) FROM Organization o WHERE LOWER(o.fullName) = :n AND o.id <> :id", Long.class)
+                .setParameter("n", fullName.toLowerCase(Locale.ROOT)).setParameter("id", excludeId)
+                .getSingleResult() > 0;
+    }
+
+    public List<String> findAllFullNames() {
+        return em.createQuery("SELECT o.fullName FROM Organization o WHERE o.fullName IS NOT NULL", String.class)
+                .getResultList();
+    }
+
     public List<Integer> findAllRatings() {
         return em.createQuery("SELECT o.rating FROM Organization o", Integer.class).getResultList();
     }

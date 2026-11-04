@@ -23,8 +23,21 @@ public class User implements Serializable {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role = Role.USER;
+
     public User(String name, String passwordHash) {
         this.name = name;
         this.passwordHash = passwordHash;
+    }
+
+    public User(String name, String passwordHash, Role role) {
+        this(name, passwordHash);
+        this.role = role;
+    }
+
+    public boolean isAdmin() {
+        return role == Role.ADMIN;
     }
 }

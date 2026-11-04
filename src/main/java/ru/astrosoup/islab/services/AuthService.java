@@ -28,8 +28,14 @@ public class AuthService {
         if (users.find(login) != null) {
             throw new BusinessException("Пользователь «" + login + "» уже существует");
         }
+        // роль ADMIN назначается только напрямую в БД, при регистрации всегда создаётся обычный пользователь
         users.persist(new User(login, PasswordHasher.hash(password)));
         PersistenceFailures.flush(users::flush, "Пользователь «" + login + "» уже существует");
+    }
+
+    public boolean isAdmin(String name) {
+        User user = name == null ? null : users.find(name.trim());
+        return user != null && user.isAdmin();
     }
 
     public boolean authenticate(String name, String password) {

@@ -8,6 +8,8 @@ import ru.astrosoup.islab.entities.Coordinates;
 import ru.astrosoup.islab.events.DataChangedEvent;
 import ru.astrosoup.islab.events.EntityKind;
 import ru.astrosoup.islab.exceptions.BusinessException;
+import ru.astrosoup.islab.exceptions.ConflictException;
+import ru.astrosoup.islab.exceptions.ObjectNotFoundException;
 import ru.astrosoup.islab.repositories.CoordinatesRepository;
 import ru.astrosoup.islab.repositories.OrganizationRepository;
 
@@ -33,7 +35,7 @@ public class CoordinatesService {
     public Coordinates get(long id) {
         Coordinates c = repository.find(id);
         if (c == null) {
-            throw new BusinessException("Координаты #" + id + " не найдены (возможно, удалены другим пользователем)");
+            throw new ObjectNotFoundException("Координаты #" + id + " не найдены (возможно, удалены другим пользователем)");
         }
         return c;
     }
@@ -49,6 +51,9 @@ public class CoordinatesService {
 
     public Coordinates update(Coordinates draft) {
         Coordinates managed = get(draft.getId());
+        if (managed.getVersion() != draft.getVersion()) {
+            throw new ConflictException("Координаты были изменены другим пользователем. Закройте окно и откройте их заново.");
+        }
         managed.setX(draft.getX());
         managed.setY(draft.getY());
         validator.check(managed);

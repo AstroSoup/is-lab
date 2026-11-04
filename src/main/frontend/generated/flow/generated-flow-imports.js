@@ -31,6 +31,7 @@ import '@vaadin/integer-field/src/vaadin-integer-field.js';
 import '@vaadin/form-layout/src/vaadin-form-layout.js';
 import '@vaadin/form-layout/src/vaadin-form-item.js';
 import '@vaadin/form-layout/src/vaadin-form-row.js';
+import '@vaadin/upload/src/vaadin-upload.js';
 import '@vaadin/combo-box/src/vaadin-combo-box.js';
 import 'Frontend/generated/jar-resources/comboBoxConnector.js';
 import '@vaadin/multi-select-combo-box/src/vaadin-multi-select-combo-box.js';
@@ -41,14 +42,20 @@ import 'Frontend/generated/jar-resources/ReactRouterOutletElement.tsx';
 
 const loadOnDemand = (key) => {
   const pending = [];
-  if (key === '35744ac1500262d8b43139a8baacc0c26c1f334a4ffec625d18b620db96574e5') {
-    pending.push(import('./chunks/chunk-d2bcd8396b86ac93025d97deb0f86e054eaecb51ec2d6590010e37208954fd3a.js'));
+  if (key === '38c423aba226337e0960b721a01d66b687a085f0300b3184e0de225d87266056') {
+    pending.push(import('./chunks/chunk-66a617b04a6e4aaa1091f02047d3e59c13ba0b8a85a10d226452b346e74e96ca.js'));
+  }
+  if (key === 'b7c0cb90f391bb5189dc35c08d6ae227e97bab726b68e0536a43c642ddd5d8f5') {
+    pending.push(import('./chunks/chunk-66a617b04a6e4aaa1091f02047d3e59c13ba0b8a85a10d226452b346e74e96ca.js'));
   }
   if (key === '5faa6853de20cdf8500352797817bf1a3dc90c36c9a0813a70c4e94dd38e8a50') {
     pending.push(import('./chunks/chunk-1363c72f22334380eefba07386cc6c375023d19701138d33d1f15fa296184b05.js'));
   }
-  if (key === '38c423aba226337e0960b721a01d66b687a085f0300b3184e0de225d87266056') {
-    pending.push(import('./chunks/chunk-66a617b04a6e4aaa1091f02047d3e59c13ba0b8a85a10d226452b346e74e96ca.js'));
+  if (key === '2a3e8df8340bf68a19ba57ed27608e2ce4d0694d6ae4d519454f26f67787495b') {
+    pending.push(import('./chunks/chunk-68d9d916f3253d0b44c13e85c2c10a2e5f6351b7d5f672267d78ee50f2a1c7bb.js'));
+  }
+  if (key === '35744ac1500262d8b43139a8baacc0c26c1f334a4ffec625d18b620db96574e5') {
+    pending.push(import('./chunks/chunk-8baf559156dc59f506541899f652db9ca5530d127a72031ec94f10ba8bf38afc.js'));
   }
   return Promise.all(pending);
 }

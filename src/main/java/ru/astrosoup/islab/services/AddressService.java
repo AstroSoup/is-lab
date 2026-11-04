@@ -8,6 +8,8 @@ import ru.astrosoup.islab.entities.Address;
 import ru.astrosoup.islab.events.DataChangedEvent;
 import ru.astrosoup.islab.events.EntityKind;
 import ru.astrosoup.islab.exceptions.BusinessException;
+import ru.astrosoup.islab.exceptions.ConflictException;
+import ru.astrosoup.islab.exceptions.ObjectNotFoundException;
 import ru.astrosoup.islab.repositories.AddressRepository;
 import ru.astrosoup.islab.repositories.OrganizationRepository;
 
@@ -33,7 +35,7 @@ public class AddressService {
     public Address get(long id) {
         Address a = repository.find(id);
         if (a == null) {
-            throw new BusinessException("Адрес #" + id + " не найден (возможно, удалён другим пользователем)");
+            throw new ObjectNotFoundException("Адрес #" + id + " не найден (возможно, удалён другим пользователем)");
         }
         return a;
     }
@@ -50,6 +52,9 @@ public class AddressService {
 
     public Address update(Address draft) {
         Address managed = get(draft.getId());
+        if (managed.getVersion() != draft.getVersion()) {
+            throw new ConflictException("Адрес был изменён другим пользователем. Закройте окно и откройте его заново.");
+        }
         managed.setStreet(normalize(draft.getStreet()));
         validator.check(managed);
         PersistenceFailures.flush(repository::flush, "Конфликт при сохранении адреса");

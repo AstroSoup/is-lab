@@ -13,6 +13,7 @@
         <class>ru.astrosoup.islab.entities.Coordinates</class>
         <class>ru.astrosoup.islab.entities.Address</class>
         <class>ru.astrosoup.islab.entities.User</class>
+        <class>ru.astrosoup.islab.entities.ImportOperation</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <!-- кэшируются только справочники (@Cacheable(true)): Coordinates и Address -->

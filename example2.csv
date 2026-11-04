@@ -1,0 +1,3 @@
+name,fullName,coordinatesX,coordinatesY,annualTurnover,employeesCount,rating,type,officialAddress,postalAddress
+Ромашка,ООО Ромашковая Долина,120.5,300,5000000,40,4,PRIVATE_LIMITED_COMPANY,"ул. Ленина, 1","ул. Мира, 5"
+Вектор,,10,20,1000000,12,2,COMMERCIAL,,

@@ -31,6 +31,8 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Координаты", CoordinatesView.class, VaadinIcon.MAP_MARKER.create()));
         nav.addItem(new SideNavItem("Адреса", AddressesView.class, VaadinIcon.HOME.create()));
         nav.addItem(new SideNavItem("Специальные операции", OperationsView.class, VaadinIcon.COGS.create()));
+        nav.addItem(new SideNavItem("Импорт из CSV", ImportView.class, VaadinIcon.UPLOAD.create()));
+        nav.addItem(new SideNavItem("История импорта", ImportHistoryView.class, VaadinIcon.CLOCK.create()));
         addToDrawer(nav);
     }
 }

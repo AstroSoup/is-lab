@@ -16,14 +16,19 @@ public class BeanValidator {
     Validator validator;
 
     public void check(Object bean) {
-        Set<ConstraintViolation<Object>> violations = validator.validate(bean);
-        if (!violations.isEmpty()) {
-            List<String> messages = violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .distinct()
-                    .sorted()
-                    .toList();
+        List<String> messages = messages(bean);
+        if (!messages.isEmpty()) {
             throw new EntityValidationException(messages);
         }
+    }
+
+    /** Сообщения обо всех нарушенных ограничениях объекта; пустой список, если объект корректен. */
+    public List<String> messages(Object bean) {
+        Set<ConstraintViolation<Object>> violations = validator.validate(bean);
+        return violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .distinct()
+                .sorted()
+                .toList();
     }
 }

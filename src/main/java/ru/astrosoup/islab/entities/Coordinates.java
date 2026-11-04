@@ -34,6 +34,10 @@ public class Coordinates implements Serializable {
     @Column(name = "y", nullable = false)
     private int y;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private long version;
+
     @AssertTrue(message = "Координата X должна быть конечным числом")
     public boolean isXFinite() {
         return x == null || Double.isFinite(x);

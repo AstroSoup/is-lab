@@ -10,6 +10,7 @@ import ru.astrosoup.islab.entities.OrganizationType;
 import ru.astrosoup.islab.events.DataChangedEvent;
 import ru.astrosoup.islab.events.EntityKind;
 import ru.astrosoup.islab.exceptions.BusinessException;
+import ru.astrosoup.islab.exceptions.ObjectNotFoundException;
 import ru.astrosoup.islab.repositories.AddressRepository;
 import ru.astrosoup.islab.repositories.OrganizationRepository;
 
@@ -150,7 +151,7 @@ public class OperationsService {
 
     private static Organization require(Organization o, long id) {
         if (o == null) {
-            throw new BusinessException("Организация #" + id + " не найдена (возможно, удалена другим пользователем)");
+            throw new ObjectNotFoundException("Организация #" + id + " не найдена (возможно, удалена другим пользователем)");
         }
         return o;
     }
